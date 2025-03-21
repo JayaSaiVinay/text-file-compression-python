@@ -65,7 +65,6 @@ def decode(encoded_text, root):
 
 def write_bits(filename, bit_string):
     with open(filename, 'wb') as file:
-        # Corrected padding calculation: no extra padding if already a multiple of 8.
         padding = (8 - len(bit_string) % 8) % 8
         bit_string = bit_string + '0' * padding  # Add padding bits
         byte_array = bytearray(int(bit_string[i:i + 8], 2) for i in range(0, len(bit_string), 8))
@@ -92,12 +91,11 @@ def compress_file(input_file_path, output_file_path):
     print(f"Encoded text (first 100 bits): {encoded_text[:100]}")
     print(f"Codebook: {codebook}")
 
-    # Save the codebook in a separate file (with .codebook extension)
+    # Saving codebook
     codebook_path = output_file_path.with_suffix(".codebook")
     with open(codebook_path, 'wb') as file:
         pickle.dump(codebook, file)
 
-    # Save the encoded bits to the output file
     write_bits(output_file_path, encoded_text)
 
 def build_tree_from_code(codebook):
